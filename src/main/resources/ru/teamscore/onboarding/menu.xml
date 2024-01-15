@@ -3,6 +3,8 @@
 
     <menu id="application" title="msg://ru.teamscore.onboarding/menu.application.title" opened="true">
         <item view="User.list" title="msg://ru.teamscore.onboarding.view.user/UserListView.title"/>
+        <item view="Organization.list"
+              title="msg://ru.teamscore.onboarding.view.organization/organizationListView.title"/>
     </menu>
 
 </menu-config>
