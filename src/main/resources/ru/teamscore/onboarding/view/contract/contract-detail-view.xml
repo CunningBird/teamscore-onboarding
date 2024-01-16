@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://contractDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="contractDc"
+                  class="ru.teamscore.onboarding.entity.Contract">
+            <fetchPlan extends="_base">
+                <property name="customer" fetch="JOIN" fetchPlan="_base"/>
+                <property name="performer" fetch="JOIN" fetchPlan="_base"/>
+                <property name="status" fetch="JOIN" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="contractDc">
+            <entityPicker id="customerField" property="customer">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="performerField" property="performer">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <textField id="numberField" property="number"/>
+            <dateTimePicker id="signedDateField" property="signedDate"/>
+            <select id="typeField" property="type"/>
+            <dateTimePicker id="dateFromField" property="dateFrom"/>
+            <dateTimePicker id="dateToField" property="dateTo"/>
+            <textField id="amountField" property="amount"/>
+            <textField id="vatField" property="vat"/>
+            <textField id="totalAmountField" property="totalAmount"/>
+            <entityPicker id="statusField" property="status">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

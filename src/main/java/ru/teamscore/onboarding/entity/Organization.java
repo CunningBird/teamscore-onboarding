@@ -3,12 +3,10 @@ package ru.teamscore.onboarding.entity;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -19,6 +17,12 @@ public class Organization {
     @Column(name = "ID", nullable = false)
     @Id
     private UUID id;
+
+    @JoinTable(name = "ORGANIZATION_EMPLOYERS",
+            joinColumns = @JoinColumn(name = "ORGANIZATION_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"))
+    @ManyToMany
+    private List<User> employers;
 
     @NotNull
     @InstanceName
@@ -35,14 +39,22 @@ public class Organization {
 
     @NotNull
     @Column(name = "ESCAPE_VAT", nullable = false)
-    private Integer escapeVat;
+    private Double escapeVat;
 
-    public Integer getEscapeVat() {
+    public void setEscapeVat(Double escapeVat) {
+        this.escapeVat = escapeVat;
+    }
+
+    public Double getEscapeVat() {
         return escapeVat;
     }
 
-    public void setEscapeVat(Integer escapeVat) {
-        this.escapeVat = escapeVat;
+    public List<User> getEmployers() {
+        return employers;
+    }
+
+    public void setEmployers(List<User> employers) {
+        this.employers = employers;
     }
 
     public String getRegistrationNumber() {

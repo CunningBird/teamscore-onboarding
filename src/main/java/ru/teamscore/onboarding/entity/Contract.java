@@ -7,13 +7,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
 @Table(name = "CONTRACT", indexes = {
         @Index(name = "IDX_CONTRACT_CUSTOMER", columnList = "CUSTOMER_ID"),
         @Index(name = "IDX_CONTRACT_PERFORMER", columnList = "PERFORMER_ID"),
-        @Index(name = "IDX_CONTRACT_STATUS", columnList = "STATUS_ID")
+        @Index(name = "IDX_CONTRACT_STATUS", columnList = "STATUS_ID"),
+        @Index(name = "IDX_CONTRACT_CUSTOMER_SIGNER", columnList = "CUSTOMER_SIGNER_ID"),
+        @Index(name = "IDX_CONTRACT_PERFORMER_SIGNER", columnList = "PERFORMER_SIGNER_ID")
 })
 @Entity
 public class Contract {
@@ -23,13 +26,11 @@ public class Contract {
     private UUID id;
 
     @JoinColumn(name = "CUSTOMER_ID", nullable = false)
-    @Composition
     @NotNull
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     private Organization customer;
 
     @JoinColumn(name = "PERFORMER_ID", nullable = false)
-    @Composition
     @NotNull
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     private Organization performer;
@@ -46,29 +47,108 @@ public class Contract {
     @NotNull
     private String type;
 
-    @Column(name = "DATE_FROM")
-    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DATE_FROM", nullable = false)
     private Date dateFrom;
 
-    @Column(name = "DATE_TO")
-    @Temporal(TemporalType.TIMESTAMP)
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DATE_TO", nullable = false)
     private Date dateTo;
 
-    @Column(name = "AMOUNT")
-    private Integer amount;
-
-    @Column(name = "VAT")
-    private Integer vat;
-
-    @Column(name = "TOTAL_AMOUNT", nullable = false)
     @NotNull
-    private Integer totalAmount;
+    @Column(name = "AMOUNT", nullable = false)
+    private Double amount;
+
+    @NotNull
+    @Column(name = "VAT", nullable = false)
+    private Double vat;
+
+    @NotNull
+    @Column(name = "TOTAL_AMOUNT", nullable = false)
+    private Double totalAmount;
+
+    @JoinColumn(name = "CUSTOMER_SIGNER_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    private User customerSigner;
+
+    @JoinColumn(name = "PERFORMER_SIGNER_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    private User performerSigner;
 
     @JoinColumn(name = "STATUS_ID", nullable = false)
-    @Composition
     @NotNull
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     private Status status;
+
+    @Composition
+    @OneToMany(mappedBy = "contract")
+    private List<Stage> stages;
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public List<Stage> getStages() {
+        return stages;
+    }
+
+    public void setStages(List<Stage> stages) {
+        this.stages = stages;
+    }
+
+    public User getPerformerSigner() {
+        return performerSigner;
+    }
+
+    public void setPerformerSigner(User performerSigner) {
+        this.performerSigner = performerSigner;
+    }
+
+    public User getCustomerSigner() {
+        return customerSigner;
+    }
+
+    public void setCustomerSigner(User customerSigner) {
+        this.customerSigner = customerSigner;
+    }
 
     public Status getStatus() {
         return status;
@@ -76,46 +156,6 @@ public class Contract {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public Integer getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(Integer totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public Integer getVat() {
-        return vat;
-    }
-
-    public void setVat(Integer vat) {
-        this.vat = vat;
-    }
-
-    public Integer getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Integer amount) {
-        this.amount = amount;
-    }
-
-    public Date getDateTo() {
-        return dateTo;
-    }
-
-    public void setDateTo(Date dateTo) {
-        this.dateTo = dateTo;
-    }
-
-    public Date getDateFrom() {
-        return dateFrom;
-    }
-
-    public void setDateFrom(Date dateFrom) {
-        this.dateFrom = dateFrom;
     }
 
     public ContractType getType() {
