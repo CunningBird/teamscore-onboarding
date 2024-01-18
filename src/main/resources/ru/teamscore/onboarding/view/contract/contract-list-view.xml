@@ -10,6 +10,8 @@
                 <property name="customer" fetch="JOIN" fetchPlan="_base"/>
                 <property name="performer" fetch="JOIN" fetchPlan="_base"/>
                 <property name="status" fetch="JOIN" fetchPlan="_base"/>
+                <property name="customerSigner" fetchPlan="_base"/>
+                <property name="performerSigner" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="contractsDl" readOnly="true">
                 <query>
@@ -63,6 +65,8 @@
                 <column property="amount"/>
                 <column property="vat"/>
                 <column property="totalAmount"/>
+                <column property="customerSigner"/>
+                <column property="performerSigner" />
                 <column property="status"/>
             </columns>
         </dataGrid>

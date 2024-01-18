@@ -9,6 +9,8 @@
                 <property name="customer" fetch="JOIN" fetchPlan="_base"/>
                 <property name="performer" fetch="JOIN" fetchPlan="_base"/>
                 <property name="status" fetch="JOIN" fetchPlan="_base"/>
+                <property name="performerSigner" fetchPlan="_base"/>
+                <property name="customerSigner" fetchPlan="_base"/>
             </fetchPlan>
             <loader/>
         </instance>
@@ -42,6 +44,18 @@
             <textField id="amountField" property="amount"/>
             <textField id="vatField" property="vat"/>
             <textField id="totalAmountField" property="totalAmount"/>
+            <entityPicker id="customerSignerField" property="customerSigner">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="performerSignerField" property="performerSigner">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
             <entityPicker id="statusField" property="status">
                 <actions>
                     <action id="entityLookup" type="entity_lookup"/>
