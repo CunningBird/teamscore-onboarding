@@ -14,7 +14,6 @@ import java.util.UUID;
 @Table(name = "CONTRACT", indexes = {
         @Index(name = "IDX_CONTRACT_CUSTOMER", columnList = "CUSTOMER_ID"),
         @Index(name = "IDX_CONTRACT_PERFORMER", columnList = "PERFORMER_ID"),
-        @Index(name = "IDX_CONTRACT_STATUS", columnList = "STATUS_ID"),
         @Index(name = "IDX_CONTRACT_CUSTOMER_SIGNER", columnList = "CUSTOMER_SIGNER_ID"),
         @Index(name = "IDX_CONTRACT_PERFORMER_SIGNER", columnList = "PERFORMER_SIGNER_ID")
 })
@@ -77,14 +76,21 @@ public class Contract {
     @OneToOne(fetch = FetchType.LAZY)
     private User performerSigner;
 
-    @JoinColumn(name = "STATUS_ID", nullable = false)
+    @Column(name = "STATUS", nullable = false)
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    private Status status;
+    private String status;
 
     @Composition
     @OneToMany(mappedBy = "contract")
     private List<Stage> stages;
+
+    public void setStatus(ContractStatus status) {
+        this.status = status == null ? null : status.getId();
+    }
+
+    public ContractStatus getStatus() {
+        return status == null ? null : ContractStatus.fromId(status);
+    }
 
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
@@ -148,14 +154,6 @@ public class Contract {
 
     public void setCustomerSigner(User customerSigner) {
         this.customerSigner = customerSigner;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public ContractType getType() {

@@ -57,12 +57,10 @@ public class Stage {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @OnDeleteInverse(DeletePolicy.CASCADE)
     @Composition
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "stage")
     private Invoice invoice;
 
-    @OnDeleteInverse(DeletePolicy.CASCADE)
     @Composition
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "stage")
     private ServiceCompletionCertificate serviceCompletionCertificate;

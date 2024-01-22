@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 @Entity
 public class CostSettings extends AppSettingsEntity {
 
-    @AppSettingsDefault("0")
+    @AppSettingsDefault("0.1")
     @Column(name = "VAT")
     private Double vat;
 

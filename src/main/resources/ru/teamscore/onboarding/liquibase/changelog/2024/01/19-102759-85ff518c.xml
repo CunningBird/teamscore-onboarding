@@ -40,12 +40,23 @@
             </column>
             <column name="CUSTOMER_SIGNER_ID" type="UUID"/>
             <column name="PERFORMER_SIGNER_ID" type="UUID"/>
-            <column name="STATUS_ID" type="UUID">
+            <column name="STATUS" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet id="2" author="teamscore-onboarding">
+        <createTable tableName="COST_SETTINGS">
+            <column name="ID" type="INT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_COST_SETTINGS"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VAT" type="DOUBLE"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="teamscore-onboarding">
         <createTable tableName="INVOICE">
             <column name="ID" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_INVOICE"/>
@@ -67,7 +78,7 @@
             <column name="STAGE_ID" type="UUID"/>
         </createTable>
     </changeSet>
-    <changeSet id="3" author="teamscore-onboarding">
+    <changeSet id="4" author="teamscore-onboarding">
         <createTable tableName="ORGANIZATION">
             <column name="ID" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORGANIZATION"/>
@@ -86,7 +97,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="4" author="teamscore-onboarding">
+    <changeSet id="5" author="teamscore-onboarding">
         <createTable tableName="ORGANIZATION_EMPLOYERS">
             <column name="ORGANIZATION_ID" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORGANIZATION_EMPLOYERS"/>
@@ -96,7 +107,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="5" author="teamscore-onboarding">
+    <changeSet id="6" author="teamscore-onboarding">
         <createTable tableName="SERVICE_COMPLETION_CERTIFICATE">
             <column name="ID" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SERVICE_COMPLETION_CERTIFICATE"/>
@@ -120,7 +131,7 @@
             <column name="STAGE_ID" type="UUID"/>
         </createTable>
     </changeSet>
-    <changeSet id="6" author="teamscore-onboarding">
+    <changeSet id="7" author="teamscore-onboarding">
         <createTable tableName="STAGE">
             <column name="ID" type="UUID">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="PK_STAGE"/>
@@ -145,19 +156,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="DESCRIPTION" type="VARCHAR(255)"/>
-        </createTable>
-    </changeSet>
-    <changeSet id="7" author="teamscore-onboarding">
-        <createTable tableName="STATUS">
-            <column name="ID" type="UUID">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_STATUS"/>
-            </column>
-            <column name="CODE" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="NAME" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
     <changeSet id="8" author="teamscore-onboarding">
@@ -197,15 +195,6 @@
                                  referencedTableName="USER_"/>
     </changeSet>
     <changeSet id="12" author="teamscore-onboarding">
-        <createIndex indexName="IDX_CONTRACT_STATUS" tableName="CONTRACT">
-            <column name="STATUS_ID"/>
-        </createIndex>
-
-        <addForeignKeyConstraint baseColumnNames="STATUS_ID" baseTableName="CONTRACT"
-                                 constraintName="FK_CONTRACT_ON_STATUS" referencedColumnNames="ID"
-                                 referencedTableName="STATUS"/>
-    </changeSet>
-    <changeSet id="13" author="teamscore-onboarding">
         <createIndex indexName="IDX_INVOICE_STAGE" tableName="INVOICE">
             <column name="STAGE_ID"/>
         </createIndex>
@@ -213,7 +202,7 @@
         <addForeignKeyConstraint baseColumnNames="STAGE_ID" baseTableName="INVOICE" constraintName="FK_INVOICE_ON_STAGE"
                                  referencedColumnNames="ID" referencedTableName="STAGE"/>
     </changeSet>
-    <changeSet id="14" author="teamscore-onboarding">
+    <changeSet id="13" author="teamscore-onboarding">
         <createIndex indexName="IDX_SERVICE_COMPLETION_CERTIFICATE_STAGE" tableName="SERVICE_COMPLETION_CERTIFICATE">
             <column name="STAGE_ID"/>
         </createIndex>
@@ -222,7 +211,7 @@
                                  constraintName="FK_SERVICE_COMPLETION_CERTIFICATE_ON_STAGE" referencedColumnNames="ID"
                                  referencedTableName="STAGE"/>
     </changeSet>
-    <changeSet id="15" author="teamscore-onboarding">
+    <changeSet id="14" author="teamscore-onboarding">
         <createIndex indexName="IDX_STAGE_CONTRACT" tableName="STAGE">
             <column name="CONTRACT_ID"/>
         </createIndex>
@@ -231,12 +220,12 @@
                                  constraintName="FK_STAGE_ON_CONTRACT" onDelete="CASCADE" referencedColumnNames="ID"
                                  referencedTableName="CONTRACT"/>
     </changeSet>
-    <changeSet id="16" author="teamscore-onboarding">
+    <changeSet id="15" author="teamscore-onboarding">
         <addForeignKeyConstraint baseColumnNames="ORGANIZATION_ID" baseTableName="ORGANIZATION_EMPLOYERS"
                                  constraintName="FK_ORGEMP_ON_ORGANIZATION" referencedColumnNames="ID"
                                  referencedTableName="ORGANIZATION"/>
     </changeSet>
-    <changeSet id="17" author="teamscore-onboarding">
+    <changeSet id="16" author="teamscore-onboarding">
         <addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="ORGANIZATION_EMPLOYERS"
                                  constraintName="FK_ORGEMP_ON_USER" referencedColumnNames="ID"
                                  referencedTableName="USER_"/>
