@@ -40,8 +40,8 @@
             <textField id="numberField" property="number"/>
             <dateTimePicker id="signedDateField" property="signedDate"/>
             <select id="typeField" property="type"/>
-            <dateTimePicker id="dateFromField" property="dateFrom"/>
-            <dateTimePicker id="dateToField" property="dateTo"/>
+            <datePicker id="dateFromField" property="dateFrom"/>
+            <datePicker id="dateToField" property="dateTo"/>
             <textField id="amountField" property="amount" required="true"/>
             <textField id="vatField" enabled="false" label="Vat"/>
             <checkbox id="zeroVatParam" label="Without Vat"/>
@@ -61,10 +61,20 @@
             <select id="statusField" property="status"/>
         </formLayout>
         <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="stageAdd" text="Add"/>
             <button action="stagesDataGrid.create"/>
             <button action="stagesDataGrid.edit"/>
             <button action="stagesDataGrid.remove"/>
         </hbox>
+        <formLayout id="stagesForm">
+            <textField id="stageNameField" label="name" datatype="string"/>
+            <datePicker id="stageDateFromField" label="dateFrom" datatype="date"/>
+            <datePicker id="stageDateToField" label="dateTo" datatype="date"/>
+            <textField id="stageAmountField" label="amount" datatype="double"/>
+            <textField id="stageVatField" label="vat" datatype="double"/>
+            <textField id="stageTotalAmountField" label="totalAmount" datatype="double"/>
+            <textField id="stageDescriptionField" label="description" datatype="string"/>
+        </formLayout>
         <dataGrid id="stagesDataGrid" dataContainer="stagesDc" width="100%" height="100%">
             <actions>
                 <action id="create" type="list_create"/>
