@@ -38,7 +38,7 @@
                 </actions>
             </entityPicker>
             <textField id="numberField" property="number"/>
-            <dateTimePicker id="signedDateField" property="signedDate"/>
+            <datePicker id="signedDateField" property="signedDate"/>
             <select id="typeField" property="type"/>
             <datePicker id="dateFromField" property="dateFrom"/>
             <datePicker id="dateToField" property="dateTo"/>
@@ -59,25 +59,26 @@
                 </actions>
             </entityPicker>
             <select id="statusField" property="status"/>
+            <fileStorageUploadField id="fileField" property="file"/>
         </formLayout>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <button id="stageAdd" text="Add"/>
-            <button action="stagesDataGrid.create"/>
             <button action="stagesDataGrid.edit"/>
             <button action="stagesDataGrid.remove"/>
+            <button id="createInvoice" text="Create Invoice"/>
+            <button id="createServiceCompletionCertificate" text="Create CerviceCompetionCertificate"/>
         </hbox>
         <formLayout id="stagesForm">
             <textField id="stageNameField" label="name" datatype="string"/>
             <datePicker id="stageDateFromField" label="dateFrom" datatype="date"/>
             <datePicker id="stageDateToField" label="dateTo" datatype="date"/>
             <textField id="stageAmountField" label="amount" datatype="double"/>
-            <textField id="stageVatField" label="vat" datatype="double"/>
-            <textField id="stageTotalAmountField" label="totalAmount" datatype="double"/>
+            <textField id="stageVatField" label="vat" datatype="double" enabled="false"/>
+            <textField id="stageTotalAmountField" label="totalAmount" datatype="double" enabled="false"/>
             <textField id="stageDescriptionField" label="description" datatype="string"/>
         </formLayout>
         <dataGrid id="stagesDataGrid" dataContainer="stagesDc" width="100%" height="100%">
             <actions>
-                <action id="create" type="list_create"/>
                 <action id="edit" type="list_edit"/>
                 <action id="remove" type="list_remove"/>
             </actions>
@@ -85,10 +86,10 @@
                 <column property="name"/>
                 <column property="dateFrom"/>
                 <column property="dateTo"/>
-                <column property="amount"/>
-                <column property="vat"/>
                 <column property="totalAmount"/>
                 <column property="description"/>
+                <column property="invoice"/>
+                <column property="serviceCompletionCertificate"/>
             </columns>
         </dataGrid>
         <hbox id="detailActions">

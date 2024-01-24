@@ -3,6 +3,7 @@ package ru.teamscore.onboarding.view.contract;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.ItemClickEvent;
 import io.jmix.appsettings.AppSettings;
 import io.jmix.core.DataManager;
 import io.jmix.core.metamodel.datatype.impl.DateDatatype;
@@ -18,11 +19,8 @@ import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.teamscore.onboarding.entity.Contract;
+import ru.teamscore.onboarding.entity.*;
 
-import ru.teamscore.onboarding.entity.ContractStatus;
-import ru.teamscore.onboarding.entity.CostSettings;
-import ru.teamscore.onboarding.entity.Stage;
 import ru.teamscore.onboarding.view.main.MainView;
 
 import com.vaadin.flow.router.Route;
@@ -30,6 +28,7 @@ import io.jmix.flowui.view.*;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Route(value = "contracts/:id", layout = MainView.class)
@@ -80,6 +79,10 @@ public class ContractDetailView extends StandardDetailView<Contract> {
     private TypedTextField<Double> stageTotalAmountField;
     @ViewComponent
     private DataGrid<Stage> stagesDataGrid;
+    @ViewComponent
+    private JmixButton createInvoice;
+    @ViewComponent
+    private JmixButton createServiceCompletionCertificate;
 
     @Subscribe
     public void onInitEntity(InitEntityEvent<Contract> event) {
@@ -87,6 +90,7 @@ public class ContractDetailView extends StandardDetailView<Contract> {
         contract.setStatus(ContractStatus.NEW);
     }
 
+    // TODO optimize
     @Subscribe("amountField")
     public void onAmountFieldTypedValueChange(final SupportsTypedValue.TypedValueChangeEvent<TypedTextField<Double>, Double> event) {
         Boolean zeroVat = zeroVatParam.getValue();
@@ -98,28 +102,38 @@ public class ContractDetailView extends StandardDetailView<Contract> {
         totalAmountField.setValue(calculateTotalAmount(vatValue, amount).toString());
     }
 
-    @Subscribe("zeroVatParam")
-    public void onZeroVatComponentValueChange(final AbstractField.ComponentValueChangeEvent<JmixCheckbox, Boolean> event) {
-        Boolean zeroVat = event.getValue();
-        Double amount = amountField.getTypedValue();
+    // TODO optimize
+    @Subscribe("stageAmountField")
+    public void onStageAmountFieldTypedValueChange(final SupportsTypedValue.TypedValueChangeEvent<TypedTextField<Double>, Double> event) {
+        Boolean zeroVat = zeroVatParam.getValue();
+        Double amount = event.getValue();
         Double vatPercent = appSettings.load(CostSettings.class).getVat();
 
         Double vatValue = calculateVat(zeroVat, amount, vatPercent);
-        vatField.setValue(vatValue.toString());
-        totalAmountField.setValue(calculateTotalAmount(vatValue, amount).toString());
+        stageVatField.setValue(vatValue.toString());
+        stageTotalAmountField.setValue(calculateTotalAmount(vatValue, amount).toString());
+    }
+
+    // TODO optimize
+    @Subscribe("zeroVatParam")
+    public void onZeroVatComponentValueChange(final AbstractField.ComponentValueChangeEvent<JmixCheckbox, Boolean> event) {
+        Boolean zeroVat = event.getValue();
+        Double vatPercent = appSettings.load(CostSettings.class).getVat();
+
+        Double contractAmount = amountField.getTypedValue();
+        Double contractVatValue = calculateVat(zeroVat, contractAmount, vatPercent);
+        vatField.setValue(contractVatValue.toString());
+        totalAmountField.setValue(calculateTotalAmount(contractVatValue, contractAmount).toString());
+
+        Double stageAmount = stageAmountField.getTypedValue();
+        Double stageVatValue = calculateVat(zeroVat, stageAmount, vatPercent);
+        stageVatField.setValue(stageVatValue.toString());
+        stageTotalAmountField.setValue(calculateTotalAmount(stageVatValue, stageAmount).toString());
     }
 
     @Subscribe("stageAdd")
     public void onStageAddClick(final ClickEvent<JmixButton> event) {
         Stage stage = dataContext.create(Stage.class);
-
-        System.out.println(stageAmountField.getTypedValue().getClass().getName() + " - " + stageAmountField.getTypedValue());
-        System.out.println(stageDescriptionField.getTypedValue().getClass().getName() + " - " + stageNameField.getTypedValue());
-        System.out.println(stageDateFromField.getTypedValue().getClass().getName() + " - " + stageDateFromField.getTypedValue());
-        System.out.println(stageDateToField.getTypedValue().getClass().getName() + " - " + stageDateToField.getTypedValue());
-        System.out.println(stageVatField.getTypedValue().getClass().getName() + " - " + stageVatField.getTypedValue());
-        System.out.println(stageTotalAmountField.getTypedValue().getClass().getName() + " - " + stageTotalAmountField.getTypedValue());
-        System.out.println(stageDescriptionField.getTypedValue().getClass().getName() + " - " + stageDescriptionField.getTypedValue());
 
         stage.setContract(getEditedEntity());
         stage.setAmount(stageAmountField.getTypedValue());
@@ -165,6 +179,48 @@ public class ContractDetailView extends StandardDetailView<Contract> {
 
             stagesDc.getMutableItems().add(stage);
         }
+    }
+
+    // TODO only when selected
+    @Subscribe("createInvoice")
+    public void onCreateInvoiceClick(final ClickEvent<JmixButton> event) {
+        Stage stage = stagesDataGrid.getSingleSelectedItem();
+
+        assert stage != null;
+        assert stage.getContract() != null;
+
+        Invoice invoice = dataContext.create(Invoice.class);
+        invoice.setNumber(stage.getContract().getNumber());
+        invoice.setDate(new Date());
+        invoice.setStage(stage);
+        invoice.setAmount(stage.getAmount());
+        invoice.setVat(stage.getVat());
+        invoice.setTotalAmount(stage.getTotalAmount());
+        invoice.setDescription(stage.getDescription());
+
+        stage.setInvoice(invoice);
+        // TODO confirm saving
+    }
+
+    @Subscribe("createServiceCompletionCertificate")
+    public void onCreateServiceCompletionCertificateClick(final ClickEvent<JmixButton> event) {
+        Stage stage = stagesDataGrid.getSingleSelectedItem();
+
+        assert stage != null;
+        assert stage.getContract() != null;
+
+        ServiceCompletionCertificate certificate = dataContext.create(ServiceCompletionCertificate.class);
+        certificate.setStage(stage);
+        certificate.setNumber(stage.getContract().getNumber());
+        certificate.setDate(new Date());
+        certificate.setStage(stage);
+        certificate.setAmount(stage.getAmount());
+        certificate.setVat(stage.getVat());
+        certificate.setTotalAmount(stage.getTotalAmount());
+        certificate.setDescription(stage.getDescription());
+
+        stage.setServiceCompletionCertificate(certificate);
+        // TODO confirm saving
     }
 
     private Double calculateVat(Boolean zeroVat, Double amount, Double vatPercent) {

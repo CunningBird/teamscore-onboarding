@@ -57,15 +57,10 @@
                 <column property="customer"/>
                 <column property="performer"/>
                 <column property="number"/>
-                <column property="signedDate"/>
                 <column property="type"/>
                 <column property="dateFrom"/>
                 <column property="dateTo"/>
-                <column property="amount"/>
-                <column property="vat"/>
                 <column property="totalAmount"/>
-                <column property="customerSigner"/>
-                <column property="performerSigner" />
                 <column property="status"/>
             </columns>
         </dataGrid>

@@ -1,5 +1,6 @@
 package ru.teamscore.onboarding.entity;
 
+import io.jmix.core.FileRef;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.JmixEntity;
@@ -83,6 +84,18 @@ public class Contract {
     @Composition
     @OneToMany(mappedBy = "contract")
     private List<Stage> stages;
+
+    @Column(name = "FILE_")
+    @Lob
+    private FileRef file;
+
+    public FileRef getFile() {
+        return file;
+    }
+
+    public void setFile(FileRef file) {
+        this.file = file;
+    }
 
     public void setStatus(ContractStatus status) {
         this.status = status == null ? null : status.getId();

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://stageDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="stageDc"
+                  class="ru.teamscore.onboarding.entity.Stage">
+            <fetchPlan extends="_base">
+                <property name="invoice" fetchPlan="_base"/>
+                <property name="serviceCompletionCertificate" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="stageDc">
+            <textField id="nameField" property="name"/>
+            <datePicker id="dateFromField" property="dateFrom"/>
+            <datePicker id="dateToField" property="dateTo"/>
+            <textField id="amountField" property="amount"/>
+            <textField id="vatField" property="vat" enabled="false"/>
+            <textField id="totalAmountField" property="totalAmount" enabled="false"/>
+            <textField id="descriptionField" property="description"/>
+        </formLayout>
+
+        <formLayout id="formInvoice" visible="false">
+            <textField id="invoiceNumberField" label="Invoice Number" datatype="string" enabled="false"/>
+            <datePicker id="invoiceDateField" label="InvoiceDate" datatype="date" enabled="false"/>
+            <textField id="invoiceAmountField" label="InvoiceAmount" datatype="double" enabled="false"/>
+            <textField id="invoiceVatField" label="InvoiceVat" datatype="double" enabled="false"/>
+            <textField id="invoiceTotalAmountField" label="InvoiceTotalAmount" datatype="double" enabled="false"/>
+            <textField id="invoiceDescriptionField" label="InvoiceDescription" datatype="string" enabled="false"/>
+            <fileUploadField id="invoiceFileField" label="Upload file" />
+        </formLayout>
+
+        <formLayout id="formServiceCompletionCertificate" visible="false">
+            <textField id="serviceCompletionCertificateNumberField" label="Cervice Competion Certificate Number" datatype="string" enabled="false"/>
+            <datePicker id="serviceCompletionCertificateDateField" label="Cervice Competion Certificate Date" datatype="date" enabled="false"/>
+            <textField id="serviceCompletionCertificateAmountField" label="Cervice Competion Certificate Amount" datatype="double" enabled="false"/>
+            <textField id="serviceCompletionCertificateVatField" label="Cervice Competion Certificate Vat" datatype="double" enabled="false"/>
+            <textField id="serviceCompletionCertificateTotalAmountField" label="Cervice Competion Certificate TotalAmount" datatype="double" enabled="false"/>
+            <textField id="serviceCompletionCertificateDescriptionField" label="Cervice Competion Certificate Decription" datatype="string" enabled="false"/>
+            <fileUploadField id="serviceCompletionCertificateFileField" label="Upload File"/>
+        </formLayout>
+
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>
