@@ -25,6 +25,9 @@ repositories {
             password = (rootProject.hasProperty('premiumRepoPass') ? rootProject['premiumRepoPass'] : System.getenv('CUBA_PREMIUM_PASSWORD'))
         }
     }
+    maven {
+        url 'https://maven.vaadin.com/vaadin-addons'
+    }
 }
 
 dependencies {
@@ -47,6 +50,8 @@ dependencies {
     implementation 'io.jmix.webdav:jmix-webdav-flowui-starter'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'com.storedobject.chart:so-charts:3.2.4'
 
     runtimeOnly 'org.hsqldb:hsqldb'
 

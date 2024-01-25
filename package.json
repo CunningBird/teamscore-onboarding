@@ -70,6 +70,7 @@
     "ace-builds": "1.18.0",
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "2.29.3",
+    "echarts": "5.4.2",
     "lit": "2.7.6"
   },
   "devDependencies": {
@@ -159,6 +160,7 @@
       "ace-builds": "1.18.0",
       "construct-style-sheets-polyfill": "3.1.0",
       "date-fns": "2.29.3",
+      "echarts": "5.4.2",
       "lit": "2.7.6"
     },
     "devDependencies": {
@@ -179,6 +181,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "3e0fdb4773178ed600ac50c63ff0d759493e878624044c7ac0ad108e261cb0a1"
+    "hash": "341b91d76dcaf1b4f380ae2a28023579e45bb5a2c9f788a86182fe1df93867e5"
   }
 }

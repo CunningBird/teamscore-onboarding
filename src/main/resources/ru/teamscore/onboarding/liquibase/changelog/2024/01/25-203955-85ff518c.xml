@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="teamscore-onboarding">
+        <createTable tableName="INVOICE_FILES">
+            <column name="INVOICE_ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_INVOICE_FILES"/>
+            </column>
+            <column name="WEBDAV_DOCUMENT_ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_INVOICE_FILES"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="teamscore-onboarding">
+        <createTable tableName="SERVICE_COMPLETION_CERTIFICATE_FILES">
+            <column name="SERVICE_COMPLETION_CERTIFICATE_ID" type="UUID">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="PK_SERVICE_COMPLETION_CERTIFICATE_FILES"/>
+            </column>
+            <column name="WEBDAV_DOCUMENT_ID" type="UUID">
+                <constraints nullable="false" primaryKey="true"
+                             primaryKeyName="PK_SERVICE_COMPLETION_CERTIFICATE_FILES"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="teamscore-onboarding">
+        <addForeignKeyConstraint baseColumnNames="INVOICE_ID" baseTableName="INVOICE_FILES"
+                                 constraintName="FK_INVFIL_ON_INVOICE" referencedColumnNames="ID"
+                                 referencedTableName="INVOICE"/>
+    </changeSet>
+    <changeSet id="4" author="teamscore-onboarding">
+        <addForeignKeyConstraint baseColumnNames="WEBDAV_DOCUMENT_ID" baseTableName="INVOICE_FILES"
+                                 constraintName="FK_INVFIL_ON_WEBDAV_DOCUMENT" referencedColumnNames="ID"
+                                 referencedTableName="WEBDAV_WEBDAV_DOCUMENT"/>
+    </changeSet>
+    <changeSet id="5" author="teamscore-onboarding">
+        <addForeignKeyConstraint baseColumnNames="SERVICE_COMPLETION_CERTIFICATE_ID"
+                                 baseTableName="SERVICE_COMPLETION_CERTIFICATE_FILES"
+                                 constraintName="FK_SERCOMCERFIL_ON_SERVICE_COMPLETION_CERTIFICATE"
+                                 referencedColumnNames="ID" referencedTableName="SERVICE_COMPLETION_CERTIFICATE"/>
+    </changeSet>
+    <changeSet id="6" author="teamscore-onboarding">
+        <addForeignKeyConstraint baseColumnNames="WEBDAV_DOCUMENT_ID"
+                                 baseTableName="SERVICE_COMPLETION_CERTIFICATE_FILES"
+                                 constraintName="FK_SERCOMCERFIL_ON_WEBDAV_DOCUMENT" referencedColumnNames="ID"
+                                 referencedTableName="WEBDAV_WEBDAV_DOCUMENT"/>
+    </changeSet>
+</databaseChangeLog>

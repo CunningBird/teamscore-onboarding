@@ -6,6 +6,7 @@
         <item view="Organization.list"
               title="msg://ru.teamscore.onboarding.view.organization/organizationListView.title"/>
         <item view="Contract.list" title="msg://ru.teamscore.onboarding.view.contract/contractListView.title"/>
+        <item view="StatisticsView" title="msg://ru.teamscore.onboarding.view.statistics/statisticsView.title"/>
     </menu>
 
 </menu-config>
