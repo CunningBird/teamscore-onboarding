@@ -5,10 +5,12 @@ import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import io.jmix.webdav.entity.WebdavDocument;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -50,6 +52,21 @@ public class Invoice {
     @JoinColumn(name = "STAGE_ID")
     @OneToOne(fetch = FetchType.LAZY)
     private Stage stage;
+
+    @OnDeleteInverse(DeletePolicy.UNLINK)
+    @JoinTable(name = "INVOICE_FILES",
+            joinColumns = @JoinColumn(name = "INVOICE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "WEBDAV_DOCUMENT_ID"))
+    @ManyToMany
+    private List<WebdavDocument> files;
+
+    public List<WebdavDocument> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<WebdavDocument> files) {
+        this.files = files;
+    }
 
     public Stage getStage() {
         return stage;

@@ -1,8 +1,11 @@
 package ru.teamscore.onboarding.entity;
 
+import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import io.jmix.webdav.entity.WebdavDocument;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -80,9 +83,24 @@ public class Contract {
     @NotNull
     private String status;
 
+    @OnDeleteInverse(DeletePolicy.UNLINK)
+    @JoinTable(name = "CONTRACT_FILES",
+            joinColumns = @JoinColumn(name = "CONTRACT_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "WEBDAV_DOCUMENT_ID", referencedColumnName = "ID"))
+    @ManyToMany
+    private List<WebdavDocument> files;
+
     @Composition
     @OneToMany(mappedBy = "contract")
     private List<Stage> stages;
+
+    public List<WebdavDocument> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<WebdavDocument> files) {
+        this.files = files;
+    }
 
     public void setStatus(ContractStatus status) {
         this.status = status == null ? null : status.getId();

@@ -139,8 +139,6 @@ public class StageDetailView extends StandardDetailView<Stage> {
                 .withTemplateCode("DEFAULT")
                 .run();
 
-        System.out.println("Created report - " + document.getDocumentName());
-
         downloader.download(document.getContent(), document.getDocumentName());
     }
 
@@ -151,8 +149,6 @@ public class StageDetailView extends StandardDetailView<Stage> {
                 .addParam("entity", certificate)
                 .withTemplateCode("DEFAULT")
                 .run();
-
-        System.out.println("Created report - " + document.getDocumentName());
 
         downloader.download(document.getContent(), document.getDocumentName());
     }

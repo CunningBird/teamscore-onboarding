@@ -6,9 +6,13 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.ItemClickEvent;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.FileData;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import io.jmix.appsettings.AppSettings;
 import io.jmix.core.DataManager;
+import io.jmix.core.FileRef;
+import io.jmix.core.FileStorage;
+import io.jmix.core.FileStorageLocator;
 import io.jmix.core.metamodel.datatype.impl.DateDatatype;
 import io.jmix.core.metamodel.datatype.impl.DoubleDatatype;
 import io.jmix.core.metamodel.datatype.impl.StringDatatype;
@@ -19,8 +23,12 @@ import io.jmix.flowui.component.datepicker.TypedDatePicker;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.textfield.TypedTextField;
 import io.jmix.flowui.kit.component.button.JmixButton;
+import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionPropertyContainer;
 import io.jmix.flowui.model.DataContext;
+import io.jmix.flowui.upload.TemporaryStorage;
+import io.jmix.webdav.entity.WebdavDocument;
+import io.jmix.webdav.service.WebdavDocumentsManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.teamscore.onboarding.entity.*;
 
@@ -29,6 +37,8 @@ import ru.teamscore.onboarding.view.main.MainView;
 import com.vaadin.flow.router.Route;
 import io.jmix.flowui.view.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -55,40 +65,46 @@ public class ContractDetailView extends StandardDetailView<Contract> {
     @ViewComponent
     private TypedTextField<Double> amountField;
 
-    @Autowired
-    private DataManager dataManager;
-
-    @Autowired
-    private Notifications notifications;
-
     @ViewComponent
     private DataContext dataContext;
 
     @ViewComponent
     private CollectionPropertyContainer<Stage> stagesDc;
+
     @ViewComponent
     private TypedTextField<Double> stageAmountField;
+
     @ViewComponent
     private TypedDatePicker<Date> stageDateFromField;
+
     @ViewComponent
     private TypedDatePicker<Date> stageDateToField;
+
     @ViewComponent
     private TypedTextField<String> stageDescriptionField;
+
     @ViewComponent
     private TypedTextField<String> stageNameField;
+
     @ViewComponent
     private TypedTextField<Double> stageVatField;
+
     @ViewComponent
     private TypedTextField<Double> stageTotalAmountField;
+
     @ViewComponent
     private DataGrid<Stage> stagesDataGrid;
-    @ViewComponent
-    private JmixButton createInvoice;
-    @ViewComponent
-    private JmixButton createServiceCompletionCertificate;
 
     @ViewComponent
     private Div uploadDiv;
+
+    @Autowired
+    private FileStorageLocator fileStorageLocator;
+
+    @Autowired
+    protected WebdavDocumentsManagementService webdavDocumentsManagementService;
+    @ViewComponent
+    private CollectionContainer<WebdavDocument> filesDc;
 
     @Subscribe
     public void onInit(final InitEvent event) {
@@ -96,11 +112,16 @@ public class ContractDetailView extends StandardDetailView<Contract> {
         Upload upload = new Upload(buffer);
         upload.setAutoUpload(true);
         upload.setDropAllowed(true);
-
         upload.addSucceededListener(e -> {
-            System.out.println("Uploaded files - " + e.getFileName());
-//            content = buffer.getInputStream(e.getFileName()).readAllBytes();
-//            // TODO proccess file
+            Contract contract = getEditedEntity();
+
+            InputStream fileStream = buffer.getInputStream(e.getFileName());
+            FileStorage fileStorage = fileStorageLocator.getDefault();
+            FileRef fileRef = fileStorage.saveStream(e.getFileName(), fileStream);
+
+            WebdavDocument document = webdavDocumentsManagementService.createNonVersioningDocumentByFileRef(fileRef);
+//            contract.getFiles().add(document);
+            filesDc.getMutableItems().add(document);
         });
 
         this.uploadDiv.add(upload); // insert component to div
@@ -222,7 +243,6 @@ public class ContractDetailView extends StandardDetailView<Contract> {
         invoice.setDescription(stage.getDescription());
 
         stage.setInvoice(invoice);
-        // TODO confirm saving
     }
 
     @Subscribe("createServiceCompletionCertificate")
@@ -244,7 +264,6 @@ public class ContractDetailView extends StandardDetailView<Contract> {
         certificate.setDescription(stage.getDescription());
 
         stage.setServiceCompletionCertificate(certificate);
-        // TODO confirm saving
     }
 
     private Double calculateVat(Boolean zeroVat, Double amount, Double vatPercent) {
