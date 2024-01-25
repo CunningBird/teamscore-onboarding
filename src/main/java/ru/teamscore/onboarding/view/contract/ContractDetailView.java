@@ -210,6 +210,7 @@ public class ContractDetailView extends StandardDetailView<Contract> {
 
         assert stage != null;
         assert stage.getContract() != null;
+        assert stage.getInvoice() == null;
 
         Invoice invoice = dataContext.create(Invoice.class);
         invoice.setNumber(stage.getContract().getNumber());
@@ -230,6 +231,7 @@ public class ContractDetailView extends StandardDetailView<Contract> {
 
         assert stage != null;
         assert stage.getContract() != null;
+        assert stage.getServiceCompletionCertificate() == null;
 
         ServiceCompletionCertificate certificate = dataContext.create(ServiceCompletionCertificate.class);
         certificate.setStage(stage);

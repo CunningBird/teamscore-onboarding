@@ -7,6 +7,7 @@ import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import io.jmix.flowui.component.datepicker.TypedDatePicker;
 import io.jmix.flowui.component.textfield.TypedTextField;
+import io.jmix.flowui.download.Downloader;
 import io.jmix.flowui.kit.component.button.JmixButton;
 import io.jmix.reports.runner.ReportRunner;
 import io.jmix.reports.yarg.reporting.ReportOutputDocument;
@@ -70,6 +71,9 @@ public class StageDetailView extends StandardDetailView<Stage> {
     @Autowired
     private ReportRunner reportRunner;
 
+    @Autowired
+    private Downloader downloader;
+
     @Subscribe
     public void onInit(final InitEvent event) {
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
@@ -129,13 +133,27 @@ public class StageDetailView extends StandardDetailView<Stage> {
 
     @Subscribe("exportInvoice")
     public void onExportInvoiceClick(final ClickEvent<JmixButton> event) {
+        Invoice invoice = getEditedEntity().getInvoice();
+        ReportOutputDocument document = reportRunner.byReportCode("INVOICE")
+                .addParam("entity", invoice)
+                .withTemplateCode("DEFAULT")
+                .run();
 
+        System.out.println("Created report - " + document.getDocumentName());
+
+        downloader.download(document.getContent(), document.getDocumentName());
     }
 
     @Subscribe("exportServiceCompletionCertificate")
     public void onExportServiceCompletionCertificateClick(final ClickEvent<JmixButton> event) {
+        ServiceCompletionCertificate certificate = getEditedEntity().getServiceCompletionCertificate();
+        ReportOutputDocument document = reportRunner.byReportCode("SERVICE_COMPLETION_CERTIFICATE")
+                .addParam("entity", certificate)
+                .withTemplateCode("DEFAULT")
+                .run();
 
+        System.out.println("Created report - " + document.getDocumentName());
+
+        downloader.download(document.getContent(), document.getDocumentName());
     }
-
-
 }
