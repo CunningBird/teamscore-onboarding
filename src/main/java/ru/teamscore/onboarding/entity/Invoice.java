@@ -1,7 +1,6 @@
 package ru.teamscore.onboarding.entity;
 
 import io.jmix.core.DeletePolicy;
-import io.jmix.core.FileRef;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.InstanceName;
@@ -51,18 +50,6 @@ public class Invoice {
     @JoinColumn(name = "STAGE_ID")
     @OneToOne(fetch = FetchType.LAZY)
     private Stage stage;
-
-    @Column(name = "FILE_")
-    @Lob
-    private FileRef file;
-
-    public FileRef getFile() {
-        return file;
-    }
-
-    public void setFile(FileRef file) {
-        this.file = file;
-    }
 
     public Stage getStage() {
         return stage;

@@ -59,7 +59,7 @@
                 </actions>
             </entityPicker>
             <select id="statusField" property="status"/>
-            <fileStorageUploadField id="fileField" property="file"/>
+            <div id="uploadDiv"/>
         </formLayout>
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <button id="stageAdd" text="Add"/>

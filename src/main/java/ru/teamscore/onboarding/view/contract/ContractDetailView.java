@@ -4,6 +4,9 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.ItemClickEvent;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import io.jmix.appsettings.AppSettings;
 import io.jmix.core.DataManager;
 import io.jmix.core.metamodel.datatype.impl.DateDatatype;
@@ -83,6 +86,25 @@ public class ContractDetailView extends StandardDetailView<Contract> {
     private JmixButton createInvoice;
     @ViewComponent
     private JmixButton createServiceCompletionCertificate;
+
+    @ViewComponent
+    private Div uploadDiv;
+
+    @Subscribe
+    public void onInit(final InitEvent event) {
+        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+        Upload upload = new Upload(buffer);
+        upload.setAutoUpload(true);
+        upload.setDropAllowed(true);
+
+        upload.addSucceededListener(e -> {
+            System.out.println("Uploaded files - " + e.getFileName());
+//            content = buffer.getInputStream(e.getFileName()).readAllBytes();
+//            // TODO proccess file
+        });
+
+        this.uploadDiv.add(upload); // insert component to div
+    }
 
     @Subscribe
     public void onInitEntity(InitEntityEvent<Contract> event) {

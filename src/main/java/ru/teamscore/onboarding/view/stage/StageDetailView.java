@@ -1,8 +1,16 @@
 package ru.teamscore.onboarding.view.stage;
 
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import io.jmix.flowui.component.datepicker.TypedDatePicker;
 import io.jmix.flowui.component.textfield.TypedTextField;
+import io.jmix.flowui.kit.component.button.JmixButton;
+import io.jmix.reports.runner.ReportRunner;
+import io.jmix.reports.yarg.reporting.ReportOutputDocument;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.teamscore.onboarding.entity.*;
 
 import ru.teamscore.onboarding.view.main.MainView;
@@ -47,6 +55,48 @@ public class StageDetailView extends StandardDetailView<Stage> {
     @ViewComponent
     private FormLayout formServiceCompletionCertificate;
 
+    @ViewComponent
+    private Div invoiceUploadDiv;
+
+    @ViewComponent
+    private Div serviceCompletionCertificateUploadDiv;
+
+    @ViewComponent
+    private JmixButton exportInvoice;
+
+    @ViewComponent
+    private JmixButton exportServiceCompletionCertificate;
+
+    @Autowired
+    private ReportRunner reportRunner;
+
+    @Subscribe
+    public void onInit(final InitEvent event) {
+        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+        Upload upload1 = new Upload(buffer);
+        upload1.setAutoUpload(true);
+        upload1.setDropAllowed(true);
+
+        upload1.addSucceededListener(e -> {
+            System.out.println("Uploaded files - " + e.getFileName());
+//            content = buffer.getInputStream(e.getFileName()).readAllBytes();
+//            // TODO proccess file
+        });
+
+        Upload upload2 = new Upload(buffer);
+        upload2.setAutoUpload(true);
+        upload2.setDropAllowed(true);
+
+        upload2.addSucceededListener(e -> {
+            System.out.println("Uploaded files - " + e.getFileName());
+//            content = buffer.getInputStream(e.getFileName()).readAllBytes();
+//            // TODO proccess file
+        });
+
+        invoiceUploadDiv.add(upload1); // insert component to div
+        serviceCompletionCertificateUploadDiv.add(upload2);
+    }
+
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
         Stage stage = getEditedEntity();
@@ -54,6 +104,7 @@ public class StageDetailView extends StandardDetailView<Stage> {
         ServiceCompletionCertificate certificate = stage.getServiceCompletionCertificate();
 
         if (invoice != null) {
+            exportInvoice.setEnabled(true);
             formInvoice.setVisible(true);
             invoiceNumberField.setTypedValue(invoice.getNumber());
             invoiceAmountField.setTypedValue(invoice.getAmount());
@@ -65,6 +116,7 @@ public class StageDetailView extends StandardDetailView<Stage> {
         }
 
         if (certificate != null) {
+            exportServiceCompletionCertificate.setEnabled(true);
             formServiceCompletionCertificate.setVisible(true);
             serviceCompletionCertificateAmountField.setTypedValue(certificate.getAmount());
             serviceCompletionCertificateDateField.setTypedValue(certificate.getDate());
@@ -73,6 +125,16 @@ public class StageDetailView extends StandardDetailView<Stage> {
             serviceCompletionCertificateTotalAmountField.setTypedValue(certificate.getTotalAmount());
             serviceCompletionCertificateVatField.setTypedValue(certificate.getVat());
         }
+    }
+
+    @Subscribe("exportInvoice")
+    public void onExportInvoiceClick(final ClickEvent<JmixButton> event) {
+
+    }
+
+    @Subscribe("exportServiceCompletionCertificate")
+    public void onExportServiceCompletionCertificateClick(final ClickEvent<JmixButton> event) {
+
     }
 
 

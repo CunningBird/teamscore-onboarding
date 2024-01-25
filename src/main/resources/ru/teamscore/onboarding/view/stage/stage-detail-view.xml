@@ -37,7 +37,7 @@
             <textField id="invoiceVatField" label="InvoiceVat" datatype="double" enabled="false"/>
             <textField id="invoiceTotalAmountField" label="InvoiceTotalAmount" datatype="double" enabled="false"/>
             <textField id="invoiceDescriptionField" label="InvoiceDescription" datatype="string" enabled="false"/>
-            <fileUploadField id="invoiceFileField" label="Upload file" />
+            <div id="invoiceUploadDiv"/>
         </formLayout>
 
         <formLayout id="formServiceCompletionCertificate" visible="false">
@@ -47,12 +47,14 @@
             <textField id="serviceCompletionCertificateVatField" label="Cervice Competion Certificate Vat" datatype="double" enabled="false"/>
             <textField id="serviceCompletionCertificateTotalAmountField" label="Cervice Competion Certificate TotalAmount" datatype="double" enabled="false"/>
             <textField id="serviceCompletionCertificateDescriptionField" label="Cervice Competion Certificate Decription" datatype="string" enabled="false"/>
-            <fileUploadField id="serviceCompletionCertificateFileField" label="Upload File"/>
+            <div id="serviceCompletionCertificateUploadDiv"/>
         </formLayout>
 
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>
             <button id="closeBtn" action="closeAction"/>
+            <button id="exportInvoice" text="Export Invoice" enabled="false"/>
+            <button id="exportServiceCompletionCertificate" text="Export Service Completion Certificate" enabled="false"/>
         </hbox>
     </layout>
 </view>
